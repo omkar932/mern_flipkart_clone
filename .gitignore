@@ -2,3 +2,5 @@
 /flipcart-clone/backend/package-lock.json
 /flipcart-clone/frontend/node_modules
 /flipcart-clone/frontend/package-lock.json
+/flipcart-clone/backend/.env
+/flipcart-clone/frontend/.env
