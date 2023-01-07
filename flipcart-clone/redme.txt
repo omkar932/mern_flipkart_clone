@@ -1,0 +1,4 @@
+Import this vativables in dot env file
+PORT 
+MONGO_URL 
+
