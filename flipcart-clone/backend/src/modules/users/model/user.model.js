@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const commonSchema = require('../../../common/commonSchema');
 const bcrypt = require('bcrypt')
-const extendSchema = require('mongoose-extend-schema')
+const extendSchema = require('mongoose-extend-schema');
+const { userRoleEnum } = require('../../../common/enum/constantEnum');
 const userSchema = extendSchema(commonSchema,{
     firstName:{
         type:String,
@@ -45,7 +46,7 @@ const userSchema = extendSchema(commonSchema,{
     },
     role:{
         type:String,
-        enum:['seller','buyer','admin'],
+        enum:userRoleEnum,
         default:'buyer'
     },
     image:{
