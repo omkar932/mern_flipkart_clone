@@ -7,6 +7,6 @@ router.post('/register',verifyToken, async (req, res) => createUser(req, res))
 router.get('/getUser/:userId',verifyToken, (req, res) => findUserById(req.params.userId, res))
 router.get('/getUsers',adminOnlyAuthGuard, (req, res) => findAllUsers(req.query, res))
 router.patch('/updateUser/:userId',verifyToken, (req, res) => updateUser(req.params.userId, req.body, res))
-router.delete('/deleteUser/:userId',verifyToken, (req, res) => deleteUser(req.params.userId, res))
+router.delete('/deleteUser/:userId',adminOnlyAuthGuard, (req, res) => deleteUser(req.params.userId, res))
 
 module.exports = router;
