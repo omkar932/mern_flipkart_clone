@@ -1,6 +1,9 @@
-const { emailAlreadyExist, phoneAlreadyExist } = require("../../../common/ResponseMessages/errorResponseMessages")
+const { emailAlreadyExist, phoneAlreadyExist, incorrectPassword, loginSuccessfully } = require("../../../common/ResponseMessages/errorResponseMessages")
 const { userCreatedSuccessfully, UserFetchSuccessfully, UserNotFound, userUpdatedSuccessfully, UserDeletedSuccessfully } = require("../../../common/ResponseMessages/successResponseMessage")
 const userModel = require('../model/user.model')
+const bcrypt = require('bcrypt');
+const { createJwtToken, } = require('../../auth/service/auth.service');
+const { findUserByEmail } = require("./user.utils");
 
 const findUserById = async (userId, res = undefined) => {
     const findUser = await userModel.findOne({ _id: userId, })
@@ -10,13 +13,6 @@ const findUserById = async (userId, res = undefined) => {
         message: UserFetchSuccessfully,
         user: findUser
     })
-    return { status: true, message: UserFetchSuccessfully, response: findUser, }
-}
-
-const findUserByEmail = async (email) => {
-    const findUser = await userModel.findOne({ email: email, })
-        .exec()
-    if (!findUser) return { status: false, message: UserNotFound }
     return { status: true, message: UserFetchSuccessfully, response: findUser, }
 }
 
@@ -61,7 +57,7 @@ const findIfUserAlreadyExistWhileUpdating = async ({
 }
 
 const createUser = async (requestBody, response) => {
-    const {
+    let {
         firstName,
         lastName,
         email,
@@ -69,7 +65,7 @@ const createUser = async (requestBody, response) => {
         phone, } = requestBody.body
 
     const findUserExist = await findIfUserAlreadyExist({ email, phone })
-
+    if (password) password = await bcrypt.hash(password, 10)
     if (!findUserExist.status) return response.status(400).json({
         message: findUserExist.message
     })
@@ -87,35 +83,40 @@ const createUser = async (requestBody, response) => {
 const findAllUsers = async (
     filterData,
     res = undefined) => {
-    let { offset, limit } = filterData;
-    offset = offset ? offset : 0;
-    limit = limit ? limit : 10;
-    const findUser = await userModel.find(filterData, null, { offset: offset, limit: limit })
-        .exec()
-    if (!findUser) return { status: false, message: UserNotFound }
+    try {
+        let { offset, limit } = filterData;
+        offset = offset ? offset : 0;
+        limit = limit ? limit : 10;
+        const findUser = await userModel.find(filterData, null, { offset: offset, limit: limit })
+            .exec()
+        if (!findUser) return { status: false, message: UserNotFound }
 
-    if (res) return res.status(200).json({
-        message: UserFetchSuccessfully,
-        user: findUser
-    })
-    return { status: true, message: UserFetchSuccessfully, response: findUser, }
+        if (res) return res.status(200).json({
+            message: UserFetchSuccessfully,
+            user: findUser
+        })
+        return { status: true, message: UserFetchSuccessfully, response: findUser, }
+    } catch (error) {
+        throw error;
+    }
 }
 
 const updateUser = async (userId, updateUserData, res = undefined) => {
     const checkUser = await findUserById(userId)
-    const UserRes  = checkUser.response;
-    if(!checkUser.status) return res.status(400).json({
-        message : checkUser.message
+    const UserRes = checkUser.response;
+    if (!checkUser.status) return res.status(400).json({
+        message: checkUser.message
     })
-    const {phone,email} = updateUserData;
+    const { phone, email } = updateUserData;
     const findUserExist = await findIfUserAlreadyExistWhileUpdating({
-        email,phone,UserRes
+        email, phone, UserRes
     })
-    
-    if(!findUserExist.status) return res.status(400).json({
-        message : findUserExist.message
+
+    if (!findUserExist.status) return res.status(400).json({
+        message: findUserExist.message
     })
-    const findUser = await userModel.findOneAndUpdate({ _id: userId, }, updateUserData,{new:true})
+    if (updateUserData.password) updateUserData.password = await bcrypt.hash(updateUserData.password, 10)
+    const findUser = await userModel.findOneAndUpdate({ _id: userId, }, updateUserData, { new: true })
         .exec()
     if (res) return res.status(200).json({
         message: userUpdatedSuccessfully,
@@ -134,14 +135,32 @@ const deleteUser = async (userId, res = undefined) => {
     return { status: true, message: UserDeletedSuccessfully, response: findUser, }
 }
 
+const userLogin = async (reqBody, res) => {
+    const { email, password } = reqBody
+    const findUserByeamil = await findUserByEmail(email)
+    if (!findUserByeamil.status) return res.status(400).json({
+        message: findUserByeamil.message,
+    })
+    const comparePassword = await bcrypt.compare(password, findUserByeamil.response?.password)
+    if (!comparePassword) throw res.status(400).json({
+        message: incorrectPassword
+    })
+    const getJwtToken = await createJwtToken(findUserByeamil.response)
+    return res.status(200).json({
+        message: loginSuccessfully,
+        user: findUserByeamil.response,
+        token: getJwtToken,
+    })
+}
+
 module.exports = {
     findUserById,
     createUser,
     findIfUserAlreadyExistWhileUpdating,
     findIfUserAlreadyExist,
     findUserByPhone,
-    findUserByEmail,
     findAllUsers,
     updateUser,
     deleteUser,
+    userLogin,
 }

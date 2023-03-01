@@ -10,6 +10,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 app.use('/api/user',userRoutes)
+app.use('/api/auth',require('./modules/auth/routes/auth.routes'))
 
 app.listen(process.env.PORT, () => {
     console.log(`Server is running on port ${process.env.PORT}`);
