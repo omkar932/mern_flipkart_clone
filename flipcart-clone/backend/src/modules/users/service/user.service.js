@@ -4,6 +4,7 @@ const userModel = require('../model/user.model')
 const bcrypt = require('bcrypt');
 const { createJwtToken, } = require('../../auth/service/auth.service');
 const { findUserByEmail } = require("./user.utils");
+const { validationResult } = require("express-validator");
 
 const findUserById = async (userId, res = undefined) => {
     const findUser = await userModel.findOne({ _id: userId, })
@@ -62,15 +63,14 @@ const createUser = async (requestBody, response) => {
         lastName,
         email,
         password,
-        phone, } = requestBody.body
-
+        phone,
+        role } = requestBody.body
     const findUserExist = await findIfUserAlreadyExist({ email, phone })
     if (password) password = await bcrypt.hash(password, 10)
     if (!findUserExist.status) return response.status(400).json({
         message: findUserExist.message
     })
-
-    const register = new userModel({ firstName, lastName, email, password, phone })
+    const register = new userModel({ firstName, lastName, email, password, phone, role })
     await register.save();
 
     return response.status(201).json({
