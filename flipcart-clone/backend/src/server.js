@@ -11,7 +11,8 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use('/api/user',userRoutes)
 app.use('/api/auth',require('./modules/auth/routes/auth.routes'))
-
+app.use('/api/category',require('./modules/categories/routes/categories.routes'))
+app.use('/api/product',require('./modules/products/routes/product.routes'))
 app.listen(process.env.PORT, () => {
     console.log(`Server is running on port ${process.env.PORT}`);
 })

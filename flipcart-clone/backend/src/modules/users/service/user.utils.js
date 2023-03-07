@@ -1,5 +1,6 @@
-const { UserNotFound, UserFetchSuccessfully } = require("../../../common/ResponseMessages/successResponseMessage")
-const userModel = require("../model/user.model")
+const { UserNotFound } = require("../../../common/ResponseMessages/errorResponseMessages")
+const { UserFetchSuccessfully } = require("../../../common/ResponseMessages/successResponseMessage")
+const userModel = require("../model/user.schema")
 
 
 const findUserByEmail = async (email) => {
