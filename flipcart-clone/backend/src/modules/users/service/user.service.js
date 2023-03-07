@@ -1,6 +1,6 @@
-const { emailAlreadyExist, phoneAlreadyExist, incorrectPassword, loginSuccessfully } = require("../../../common/ResponseMessages/errorResponseMessages")
-const { userCreatedSuccessfully, UserFetchSuccessfully, UserNotFound, userUpdatedSuccessfully, UserDeletedSuccessfully } = require("../../../common/ResponseMessages/successResponseMessage")
-const userModel = require('../model/user.model')
+const { emailAlreadyExist, phoneAlreadyExist, incorrectPassword, loginSuccessfully, UserNotFound } = require("../../../common/ResponseMessages/errorResponseMessages")
+const { userCreatedSuccessfully, UserFetchSuccessfully, userUpdatedSuccessfully, UserDeletedSuccessfully } = require("../../../common/ResponseMessages/successResponseMessage")
+const userModel = require('../model/user.schema')
 const bcrypt = require('bcrypt');
 const { createJwtToken, } = require('../../auth/service/auth.service');
 const { findUserByEmail } = require("./user.utils");

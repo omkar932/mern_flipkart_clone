@@ -4,3 +4,5 @@
 /flipcart-clone/frontend/package-lock.json
 /flipcart-clone/backend/.env
 /flipcart-clone/frontend/.env
+/flipcart-clone/backend/uploads
+/flipcart-clone/backend/src/modules/products/uploads

@@ -26,7 +26,7 @@ const verifyToken = async (req, res, next) => {
                 if (err) {
                     return res.status(401).json({ error: true, message: tokenExpired });
                 }
-                req.decoded = decoded;
+                req.user = decoded
                 next();
             }
         )
@@ -40,12 +40,12 @@ const verifyToken = async (req, res, next) => {
 }
 
 const adminOnlyAuthGuard = async (req, res, next) => {
-    const findUser = await findUserByEmail(req.body.email)
-    if(!findUser.status || findUser?.response?.role !== "admin") return res.status(403).send({
+    verifyToken(req,res,next);
+    if(req?.user?.role !== 'admin') return res.status(403).send({
         error: true,
+        forbidden:403,
         message: onlyAdminHasAccess
     });
-    return verifyToken(req,res,next);
 }
 
 module.exports = {
