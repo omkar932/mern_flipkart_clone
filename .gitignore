@@ -6,3 +6,5 @@
 /flipcart-clone/frontend/.env
 /flipcart-clone/backend/uploads
 /flipcart-clone/backend/src/modules/products/uploads
+/flipcart-clone/backend/src/modules/categories/uploads
+/flipcart-clone/backend/src/uploads
