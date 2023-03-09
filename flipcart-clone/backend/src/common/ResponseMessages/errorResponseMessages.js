@@ -8,6 +8,7 @@ const onlyAdminHasAccess = "Only admin can access this"
 const CategoryNameAlreadyExist = "Category name already exist"
 const UserNotFound = 'User not found'
 const categoryNotFound = "Category not found"
+const ProductNotFound = "Product not found"
 module.exports = {
     emailAlreadyExist,
     phoneAlreadyExist,
@@ -19,4 +20,5 @@ module.exports = {
     CategoryNameAlreadyExist,
     UserNotFound,
     categoryNotFound,
+    ProductNotFound,
 }

@@ -11,7 +11,7 @@ const createJwtToken = async (userData) => {
             role: userData?.role
         },
         process.env.SECRET_TOKEN_KEY,
-        { expiresIn: '1d' }
+        { expiresIn: '30d' }
     )
     return token
 }

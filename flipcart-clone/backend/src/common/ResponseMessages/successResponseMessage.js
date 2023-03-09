@@ -10,6 +10,9 @@ const ProductCreatedSuccessfully = 'Product Created Successfully'
 const ProductFetchSuccessfully = 'Product fetch successfully'
 const ProductUpdatedSuccessfully = "Product has been updated successfully"
 const ProductDeletedSuccessfully = "Product has been deleted successfully"
+const CartCreatedSuccessfully = 'Product added to the cart'
+const CartFetchSuccessfully = 'Cart fetch successfully'
+const CartDeletedSuccessfully = "Cart has been remoed successfully"
 
 module.exports = {
     userCreatedSuccessfully,
@@ -24,4 +27,7 @@ module.exports = {
     ProductFetchSuccessfully,
     ProductDeletedSuccessfully,
     ProductUpdatedSuccessfully,
+    CartCreatedSuccessfully,
+    CartDeletedSuccessfully,
+    CartFetchSuccessfully,
 }

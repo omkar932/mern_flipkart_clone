@@ -10,7 +10,10 @@ const createCategory = async (req,response) => {
     if (findCategoryExist.status) return response.status(400).json({
         message: CategoryNameAlreadyExist,
     })
-    const createCategory = new categoriesSchema({ name, parentId, slug  })
+    let files;
+    if (req.file) files =`${process.env.LOCALHOST_API}${process.env.PORT}/public/${req.file.filename}`;
+
+    const createCategory = new categoriesSchema({ name, parentId, slug,image:files  })
     await createCategory.save();
 
     return response.status(201).json({
