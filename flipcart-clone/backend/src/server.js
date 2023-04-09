@@ -5,11 +5,13 @@ const bodyParser = require('body-parser')
 const mongoose  = require('./common/mongoConnection.model')
 const userRoutes = require('./modules/users/routes/user.routes')
 const path = require('path')
+var cors = require('cors')
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
 
 // parse application/json
 app.use(bodyParser.json())
+app.use(cors())
 app.use('/public',express.static(path.join(__dirname,'uploads')))
 app.use('/api/user',userRoutes)
 app.use('/api/auth',require('./modules/auth/routes/auth.routes'))
